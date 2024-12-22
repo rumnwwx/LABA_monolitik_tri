@@ -33,3 +33,13 @@ class UserCreatingForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("username", "first_name", "last_name", 'email', 'avatar')
+
+
+class UserLoginForm(forms.Form):
+    username = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Введите имя пользователя'
+        })
+    )
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Введите пароль'}))
