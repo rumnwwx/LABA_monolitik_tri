@@ -12,15 +12,16 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-<nav>
+<nav class="container">
     <a href="">КОД</a>
     <a href="">Главная</a>
     <a href="">Войти</a>
-    <a href="">Регистрация</a>
+    <a href="{% url 'register' %}">Регистрация</a>
 </nav>
-<main>
+<main class="container">
     <H1>емаёоу</H1>
-
+    {% block content %}
+    {% endblock %}
 </main>
 </body>
 </html>
