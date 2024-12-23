@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1 class="mb-4">Профиль пользователя</h1>
+
+    {% if object_list %}
+      <div class="list-group">
+        {% for user in object_list %}
+          <a href="{% url 'profile_detail' username=user.username %}" class="list-group-item list-group-item-action">
+            <h5 class="mb-1">{{ user.username }}</h5>
+            <p class="mb-1">{{ user.first_name }} {{ user.last_name }}</p>
+            <small>Просмотреть профиль</small>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info" role="alert">
+        Нет пользователей для отображения.
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

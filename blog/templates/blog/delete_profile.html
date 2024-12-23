@@ -1,0 +1,10 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <h2>Вы уверены, что хотите удалить свой профиль?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Да, удалить профиль</button>
+    </form>
+    <a href="{% url 'profile' %}" class="btn btn-secondary">Отмена</a>
+{% endblock %}

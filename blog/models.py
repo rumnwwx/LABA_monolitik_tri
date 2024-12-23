@@ -38,6 +38,10 @@ class Post(models.Model):
     content = models.TextField(verbose_name='Описание')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     published_at = models.DateTimeField(default=timezone.now, verbose_name='Дата и время')
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
+
+    def total_likes(self):
+        return self.likes.count()
 
     class Meta:
         ordering = ['-published_at']
@@ -48,8 +52,8 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
-    content = models.TextField(verbose_name='Комментарий')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
 
     def __str__(self):
         return f"Comment by {self.author} on {self.post}"

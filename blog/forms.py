@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import User
+from .models import User, Post, Comment
 
 
 class UserCreatingForm(forms.ModelForm):
@@ -43,3 +43,23 @@ class UserLoginForm(forms.Form):
         })
     )
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Введите пароль'}))
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'published_at']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите заголовок'}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Введите текст поста'}),
+            'published_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        }
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'})
+        }
