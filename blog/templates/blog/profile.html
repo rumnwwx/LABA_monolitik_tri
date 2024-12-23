@@ -9,16 +9,16 @@
     <div class="row align-items-center">
         <div class="col-md-4 text-center">
             {% if user.avatar %}
-            <img src="{{ user.avatar.url }}" alt="Аватар" class="img-fluid rounded-circle" style="max-width: 200px;">
+            <img src="{{ user.avatar.url }}" alt="Аватар" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover">
             {% else %}
-            <img src="/avatar/default.png" alt="Стандартный аватар" class="img-fluid rounded-circle" style="max-width: 200px;">
+            <img src="/avatars/default.png" alt="Стандартный аватар" class="img-fluid rounded-circle" style="width: 200px; height: 200px; object-fit: cover">
             {% endif %}
         </div>
         <div class="col-md-8">
             <p class="h4">{{ user.username }}</p>
             <p class="h5">{{ user.first_name }} {{ user.last_name }}</p>
             <p class="text-muted">{{ user.email }}</p>
-            <a href="{% url 'edit_profile' %}" class="btn btn-primary">изменить профиль</a>
+            <a href="{% url 'edit_profile' username=user.username %}" class="btn btn-primary">Изменить профиль</a>
             <a href="{% url 'create_post' %}" class="btn btn-primary">создать посt</a>
         </div>
     </div>

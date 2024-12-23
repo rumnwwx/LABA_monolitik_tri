@@ -1,8 +1,8 @@
 {% extends 'index.html' %}
 
 {% block content %}
-    <h2>Редактировать профиль</h2>
-    <form method="post" enctype="multipart/form-data">
+    <h2>Редактировать пост</h2>
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Сохранить изменения</button>

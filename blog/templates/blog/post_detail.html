@@ -2,11 +2,18 @@
 
 {% block content %}
 <div class="container mt-4">
+    <div class="container mt-4">
     <h1>{{ post.title }}</h1>
     <p>{{ post.content }}</p>
     <hr>
-    <h2>Комментарии</h2>
 
+    {% if user.is_authenticated and post.author == user %}
+        <a href="{% url 'edit_post' post_id=post.id %}" class="btn btn-primary">Редактировать</a>
+        <a href="{% url 'delete_post' post_id=post.id %}" class="btn btn-danger">Удалить</a>
+    {% endif %}
+</div>
+    <hr>
+    <h2>Комментарии</h2>
     {% if comments %}
         <ul class="list-group">
             {% for comment in comments %}

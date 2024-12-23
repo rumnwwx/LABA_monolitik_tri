@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
-from .forms import UserCreatingForm, UserLoginForm, PostForm, CommentForm
+from .forms import UserCreatingForm, UserLoginForm, PostForm, CommentForm, EditProfileForm
 from django.views.generic import FormView, UpdateView, DetailView
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import authenticate, login, logout as auth_logout
@@ -94,12 +95,9 @@ class UserProfileListView(ListView):
         return User.objects.filter(username=self.request.user.username)
 
 
-class UserProfileDetailView(DetailView):
-    model = User
-    template_name = 'blog/profile.html'
-
-    def get_object(self):
-        return get_object_or_404(User, username=self.kwargs['username'])
+def profile_view(request, username):
+    user = get_object_or_404(User, username=username)
+    return render(request, 'blog/profile.html', {'user': user})
 
 
 def post_detail(request, post_id):
@@ -122,6 +120,34 @@ def post_detail(request, post_id):
         'comments': comments,
         'comment_form': comment_form,
     })
+
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.user != post.author:
+        return redirect('post_detail', post_id=post.id)
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post_detail', post_id=post.id)
+    else:
+        form = PostForm(instance=post)
+
+    return render(request, 'blog/edit_post.html', {'form': form})
+
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.user == post.author:
+        post.delete()
+
+    return redirect('post_list')
 
 
 def edit_comment(request, comment_id):
@@ -147,21 +173,24 @@ def delete_comment(request, comment_id):
     return redirect('post_detail', post_id=comment.post.id)
 
 
-def edit_profile(request):
+@login_required
+def edit_profile(request, username):
+    user = get_object_or_404(User, username=username)
     if request.method == 'POST':
-        form = UserCreatingForm(request.POST, instance=request.user)
+        form = EditProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            return redirect('profile_detail', username=user.username)
     else:
-        form = UserCreatingForm(instance=request.user)
+        form = EditProfileForm(instance=user)
 
     return render(request, 'blog/edit_profile.html', {'form': form})
+
 
 @login_required
 def delete_profile(request):
     user = request.user
     if request.method == 'POST':
         user.delete()
-        return redirect('home')
+        return redirect('login')
     return render(request, 'blog/delete_profile.html')
